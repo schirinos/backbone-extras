@@ -1,6 +1,6 @@
 {
   "name": "backbone-extras",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Some Backbone objects extended to provide additional functionality",
   "main": "backbone-extras.js",
   "scripts": {
