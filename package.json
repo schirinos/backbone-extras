@@ -1,0 +1,26 @@
+{
+  "name": "backbone-extras",
+  "version": "0.0.1",
+  "description": "Some Backbone objects extended to provide additional functionality",
+  "main": "backbone-extras.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/schirinos/backbone-extras.git"
+  },
+  "keywords": [
+    "backbone",
+    "sorted",
+    "collection",
+    "event",
+    "bus"
+  ],
+  "author": "Sigfrido Chirinos",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/schirinos/backbone-extras/issues"
+  },
+  "homepage": "https://github.com/schirinos/backbone-extras"
+}
