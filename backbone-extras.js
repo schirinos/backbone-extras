@@ -41,10 +41,10 @@
             _.extend(this, _.pick(_.extend({}, options), mergeOpts));
         },
         get: function(attrStrOrPath){
-            var attrPath = UberBackbone.Model.attrPath(attrStrOrPath),
+            var attrPath = BackboneExtras.Model.attrPath(attrStrOrPath),
                 result;
 
-            UberBackbone.Model.walkPath(this.attributes, attrPath, function(val, path){
+            BackboneExtras.Model.walkPath(this.attributes, attrPath, function(val, path){
                 var attr = _.last(path);
                 if (path.length === attrPath.length){
                     // attribute found
@@ -62,14 +62,14 @@
         },
 
         set: function(key, value, opts){
-            var newAttrs = UberBackbone.Model.deepClone(this.attributes),
+            var newAttrs = BackboneExtras.Model.deepClone(this.attributes),
                 attrPath,
                 unsetObj,
                 validated;
 
             if (_.isString(key)){
                 // Backbone 0.9.0+ syntax: `model.set(key, val)` - convert the key to an attribute path
-                attrPath = UberBackbone.Model.attrPath(key);
+                attrPath = BackboneExtras.Model.attrPath(key);
             } else if (_.isArray(key)){
                 // attribute path
                 attrPath = key;
@@ -84,21 +84,21 @@
                 for (var _attrStr in attrs) {
                     if (attrs.hasOwnProperty(_attrStr)) {
                         this._setAttr(newAttrs,
-                                                    UberBackbone.Model.attrPath(_attrStr),
+                                                    BackboneExtras.Model.attrPath(_attrStr),
                                                     opts.unset ? void 0 : attrs[_attrStr],
                                                     opts);
                     }
                 }
             }
 
-            nestedChanges = UberBackbone.Model.__super__.changedAttributes.call(this);
+            nestedChanges = BackboneExtras.Model.__super__.changedAttributes.call(this);
 
             if (opts.unset && attrPath && attrPath.length === 1){ // assume it is a singular attribute being unset
                 // unsetting top-level attribute
                 unsetObj = {};
                 unsetObj[key] = void 0;
                 nestedChanges = _.omit(nestedChanges, _.keys(unsetObj));
-                validated = UberBackbone.Model.__super__.set.call(this, unsetObj, opts);
+                validated = BackboneExtras.Model.__super__.set.call(this, unsetObj, opts);
             } else {
                 unsetObj = newAttrs;
 
@@ -111,7 +111,7 @@
                     unsetObj = key;
                 }
                 nestedChanges = _.omit(nestedChanges, _.keys(unsetObj));
-                validated = UberBackbone.Model.__super__.set.call(this, unsetObj, opts);
+                validated = BackboneExtras.Model.__super__.set.call(this, unsetObj, opts);
             }
 
 
@@ -186,7 +186,7 @@
         remove: function(attrStr, opts){
             opts = opts || {};
 
-            var attrPath = UberBackbone.Model.attrPath(attrStr),
+            var attrPath = BackboneExtras.Model.attrPath(attrStr),
                 aryPath = _.initial(attrPath),
                 val = this.get(aryPath),
                 i = _.last(attrPath);
@@ -205,10 +205,10 @@
             this.set(aryPath, val, opts);
 
             if (trigger){
-                attrStr = UberBackbone.Model.createAttrStr(aryPath);
+                attrStr = BackboneExtras.Model.createAttrStr(aryPath);
                 this.trigger('remove:' + attrStr, this, oldEl);
                 for (var aryCount = aryPath.length; aryCount >= 1; aryCount--) {
-                    attrStr = UberBackbone.Model.createAttrStr(_.first(aryPath, aryCount));
+                    attrStr = BackboneExtras.Model.createAttrStr(_.first(aryPath, aryCount));
                     this.trigger('change:' + attrStr, this, oldEl);
                 }
                 this.trigger('change', this, oldEl);
@@ -218,7 +218,7 @@
         },
 
         changedAttributes: function(diff) {
-            var backboneChanged = UberBackbone.Model.__super__.changedAttributes.call(this, diff);
+            var backboneChanged = BackboneExtras.Model.__super__.changedAttributes.call(this, diff);
             if (_.isObject(backboneChanged)) {
                 return _.extend({}, nestedChanges, backboneChanged);
             }
@@ -226,7 +226,7 @@
         },
 
         toJSON: function(){
-            return UberBackbone.Model.deepClone(this.attributes);
+            return BackboneExtras.Model.deepClone(this.attributes);
         },
 
 
@@ -260,9 +260,9 @@
             var fullPathLength = attrPath.length;
             var model = this;
 
-            UberBackbone.Model.walkPath(newAttrs, attrPath, function(val, path, next){
+            BackboneExtras.Model.walkPath(newAttrs, attrPath, function(val, path, next){
                 var attr = _.last(path);
-                var attrStr = UberBackbone.Model.createAttrStr(path);
+                var attrStr = BackboneExtras.Model.createAttrStr(path);
 
                 // See if this is a new value being set
                 var isNewValue = !_.isEqual(val[attr], newValue);
@@ -276,7 +276,7 @@
 
                         // Trigger Remove Event if array being set to null
                         if (_.isArray(val)){
-                            var parentPath = UberBackbone.Model.createAttrStr(_.initial(attrPath));
+                            var parentPath = BackboneExtras.Model.createAttrStr(_.initial(attrPath));
                             model._delayedTrigger('remove:' + parentPath, model, val[attr]);
                         }
                     } else {
